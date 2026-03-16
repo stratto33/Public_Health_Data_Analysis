@@ -1,0 +1,1001 @@
+---
+title: 'DTSC 650: Data Analytics In R'
+subtitle: 'CodeGrade Final Project Part 2'
+output: html_notebook
+editor_options:
+  chunk_output_type: inline
+---
+
+## Student Info
+
+```         
+Name: Michael Stratton
+Term: Summer 2 2024
+Date: 8/1/2024
+```
+
+------------------------------------------------------------------------
+
+## General Instructions
+
+------------------------------------------------------------------------
+
+### Academic Integrity
+
+We expect all work conducted at Eastern University to reflect honest and ethical behavior. The primary rule for ensuring academic integrity is that all submitted work must be original and produced by the individual student.
+
+To uphold academic integrity, it is not permitted to view another student's work prior to submitting your own, nor should you provide your work to someone who has not yet submitted their work. Collaborating with other students is only allowed when seeking clarification on a topic or assignment instructions.
+
+See the syllabus for more information.
+
+### Name of File
+
+Name your assignment file **`BRFSS_Part2`**. This is a quarto "markdown" file, which has the extension ".qmd".
+
+------------------------------------------------------------------------
+
+### Instructions
+
+For the final section, you will choose four variables to explore. These four variables must be *different* than the three analyzed in Q1-10. Select one of the four variables you chose as the response variable and the other three as predictors. Be sure to read through all of the instructions for Q11-Q15 before choosing your 4 variables.
+
+Feel free to create multiple variables for Q12, Q13, and Q14, e.g. Q12a, Q12b, etc. Please make it clear, though, the distinction between each question/problem with comments, spacing, and new code chunks. If you use Q12a, b, etc., be sure to print the results by doing Q12a or print(Q12a). It is allowable to use `print()` on this part. Your answers must be clearly identifiable.
+
+Take time to tidy your code once you are finished. The easier it is for us to understand, the more credit you could receive.
+
+------------------------------------------------------------------------
+
+### Allowable packages
+
+The only allowable packages are `tidyverse`, `caret`, `Hmisc`, `lsr`, `olsrr`, `psych`, `lm.beta`.
+
+-   If the allowable packages are not installed on your local computer, you'll need to do a one-time installation *from the Console Window in RStudio* for each package like this:
+
+    **`install.packages('<package name>')`**
+
+    *Do not attempt to install packages in code that you submit to CodeGrade.*
+
+-   Note: installing the entire tidyverse with `install.packages('tidyverse')` from the Console Window will save you from having to install any of the tidyverse's individual packages in the future.
+
+-   In your code, load the package's library like this: **`library(<library name>)`**
+
+------------------------------------------------------------------------
+
+### Do / Do not
+
+-   Do use tidyverse functions (e.g., dplyr verbs) for all of the questions where possible.
+
+-   Do use The Pipe, either `%>%` or `|>`.
+
+-   Do use plenty of comments throughout your code chunks so that the grader can follow your line of thinking.
+
+-   Do use the "Q Discussion:" sections provided to explain your thinking and to answer the questions.
+
+-   Do not rearrange data frame outputs unless specified by the question instructions.
+
+-   Do not create multiple copies of the BRFSS dataset in your script.
+
+-   Do have integrity and submit your own work, not the work of a classmate, an online resource, or someone else.
+
+-   Do not edit the CSV file in Excel, Numbers, Sheets, etc.
+
+------------------------------------------------------------------------
+
+### Submission
+
+You only have ONE ATTEMPT to submit Part 2 to the ACTUAL submission link! On all the other assignments, you got multiple attempts; but not on this assignment.
+
+Ensure you are ready and confident in your work before submitting.
+
+------------------------------------------------------------------------
+
+### Data Set
+
+-   These data come from the [Centers for Disease Control](www.cdc.gov)
+
+-   To answer these questions you will need to use the codebook on Brightspace, called `BRFSS_2021 Codebook`. For part 2 of the project, please note that not all of the variables listed in the codebook are included in the .csv file to be downloaded from Brightspace.
+
+-   Download the `brfss2021.csv` file from Brightspace and place it in the same folder/directory as your script file. Then in RStudio, set your Working Directory to your Source File location: in the menus choose Session \| Set Working Directory \| To Source File Location. You most likely will see some warnings after it loads due to the fact that `read_csv()` will try to guess the column type but because there are so many rows it won't read enough of them to accurately make a guess.
+
+-   You must use the `read_csv()` function when loading the .csv file. Do not use read.csv().
+
+-   Do not rename the .csv file that you download from Brightspace.
+
+-   Do not edit the .csv file.
+
+------------------------------------------------------------------------
+
+### Pipe Notation
+
+You may use the `tidyverse` pipe **`%>%`** or the new base R pipe **`|>`**. For a comparison, see [here](https://www.tidyverse.org/blog/2023/04/base-vs-magrittr-pipe/).
+
+You are expected to use pipe notation in all of the CodeGrade assignments. Although there are alternate ways to filter, subset, and summarize data sets, using the pipe creates more readable code and is an important skill to develop.
+
+------------------------------------------------------------------------
+
+### Comments vs. Discussion
+
+You should include both comments within your code chunk as well a discussion after each coded answer. Comments explain your code and your thought process; the discussion uses your code to answer the questions we've asked. We have provided "Q Discussion" sections for each question. Feel free to add more lines in the discussion section.
+
+You can also use markdown headers to organize your discussion and the outline. For more info on markdown, see [here](https://rmarkdown.rstudio.com/authoring_basics.html)
+
+------------------------------------------------------------------------
+
+### Rounding requirement
+
+Unlike Part 1, there is no rounding requirement. Use your best judgment.
+
+------------------------------------------------------------------------
+
+### Dataframe vs. Tibble
+
+Unlike Part 1, there is no dataframe requirement.
+
+------------------------------------------------------------------------
+
+## Questions and Coded Solutions
+
+------------------------------------------------------------------------
+
+### Preliminaries
+
+```{r}
+### It's always a good idea when working in RStudio to start with a clean environment. 
+
+### Clear objects from the environment memory that may be leftover from previous versions of your code or other assignments by running the following line:
+rm(list = ls())
+
+### Load the libraries you need
+
+library(tidyverse) 
+library(lm.beta)
+library(psych)
+
+
+
+### Load the Data
+### Load the data file
+### Do not change this line
+brf <- read_csv("brfss2021.csv", show_col_types = FALSE)
+
+```
+
+------------------------------------------------------------------------
+
+## Questions
+
+------------------------------------------------------------------------
+
+### Q11
+
+Address the values of each of the variables (use the codebook for this and include your answer as comments). For instance, is "none" equal to a value other than 0? Are there extra decimals implied? Are there other values that should be excluded based on the responses they represent? Which variable will you seek to predict from the other variables? Answer these questions in the *Q11 Discussion:* section below the code chunk. Update the dataset to account for these values for the remainder of the questions.
+
+```{r}
+### Do not edit the following line. It is used by CodeGrade.
+# CG Q11 # 
+
+### TYPE YOUR CODE BELOW ###
+# Create new Data Frame with the desired variables (HEIGHT3, WEIGHT2, AVEDRNK3, FRENCHF1) from brf 
+brf4 <- brf |>
+  # Select desired variables
+  select(HEIGHT3, WEIGHT2, FVGREEN1, FRENCHF1) |> 
+  
+  # Filter HEIGHT3 to only include rows with a valid height response 
+  filter(HEIGHT3 %in% c(200:711, 9061:9998)) |> 
+  
+  # Create a HEIGHT_IN column that converts all heights in HEIGHT3 to inches
+  mutate(HEIGHT_IN = case_when(HEIGHT3 %in% c(200:299) ~ (HEIGHT3 %/% 100 * 12) + (HEIGHT3 - 200),
+                               HEIGHT3 %in% c(300:399) ~ (HEIGHT3 %/% 100 * 12) + (HEIGHT3 - 300),
+                               HEIGHT3 %in% c(400:499) ~ (HEIGHT3 %/% 100 * 12) + (HEIGHT3 - 400),
+                               HEIGHT3 %in% c(500:599) ~ (HEIGHT3 %/% 100 * 12) + (HEIGHT3 - 500),
+                               HEIGHT3 %in% c(600:699) ~ (HEIGHT3 %/% 100 * 12) + (HEIGHT3 - 600),
+                               HEIGHT3 %in% c(700:799) ~ (HEIGHT3 %/% 100 * 12) + (HEIGHT3 - 700),
+                               HEIGHT3 %in% c(9000:9998) ~ round((HEIGHT3 - 9000) * 0.394, 2)))
+
+
+# Further filter brf4 by filtering WEIGHT2
+brf4 <- brf4 |>
+  
+  # Filter WEIGHT2 to only include rows with a valid weight response
+  filter(WEIGHT2 %in% c(50:776, 9023:9352)) |>
+  
+  # Create a WEIGHT_LB column that converts all weights in WEIGHT2 to pounds
+  mutate(WEIGHT_LB = case_when(WEIGHT2 %in% c(50:776) ~ WEIGHT2,
+                               WEIGHT2 %in% c(9000:9399) ~ round((WEIGHT2 - 9000) * 2.205, 2)))
+
+
+# Further filter brf4 by filtering FRENCHF1
+brf4 <- brf4 |>
+  
+  # Filter FRENCHF1 to only include rows with a valid numeric response
+  filter(FRENCHF1 %in% c(101:199, 201:299, 300, 301:399, 555)) |>
+  
+  # Create a FRY_DAY column to calculate the number of fried potatoes per day
+  mutate(FRY_DAY = case_when(FRENCHF1 %in% c(101:199) ~ FRENCHF1 - 100, # "Day" to per day
+                             FRENCHF1 %in% c(201:299) ~ round((FRENCHF1 - 200) / 7, 2), # "Week" to per day
+                             FRENCHF1 == 300 ~ 0.02, # "Less than once a month" to per day
+                             FRENCHF1 %in% c(301:399) ~ round((FRENCHF1 - 300) / 30, 2), # "Month" to per day
+                             FRENCHF1 == 555 ~ 0)) # "Never" to per day
+
+
+# Further filter brf4 by filtering FVGREEN1
+brf4 <- brf4 |>
+  
+  # Filter FVGREEN1 to only include rows with a valid numeric response
+  filter(FVGREEN1 %in% c(101:199, 201:299, 300, 301:399, 555)) |>
+  
+  # Create a SALAD_DAY column to calculate the number of salads per day
+  mutate(SALAD_DAY = case_when(FVGREEN1 %in% c(101:199) ~ FVGREEN1 - 100, # "Day" to per day
+                               FVGREEN1 %in% c(201:299) ~ round((FVGREEN1 - 200) / 7, 2), # "Week" to per day
+                               FVGREEN1 == 300 ~ 0.02, # "Less than once a month" to per day
+                               FVGREEN1 %in% c(301:399) ~ round((FVGREEN1 - 300) / 30, 2), # "Month" to per day
+                               FVGREEN1 == 555 ~ 0)) # "Never" to per day
+
+
+
+# Select only the newly created columns for analysis (HEIGHT_IN, WEIGHT_LB, FRY_DAY, SALAD_DAY)
+brf4 <- brf4 |>
+  select(HEIGHT_IN, WEIGHT_LB, FRY_DAY, SALAD_DAY)
+
+brf4
+```
+
+### Q11 Discussion:
+
+I have chosen to work with the following four variables from the BRFSS_2021 Dataset: `HEIGHT3`, `WEIGHT2`, `FRENCHF1`, & `FVGREEN1`. Below is a description of each variable, including its levels, a walkthrough of how I will being using the variables to create new ones, and how I will handle missing values for each variable.
+
+#### Variable: `HEIGHT3`
+
+-   `HEIGHT3` answers the question, "About how tall are you without shoes?"
+
+    -   Below are the levels for the `HEIGHT3` variable:
+
+        -   201-711 = Height (ft/inches) Notes: 0 \_ / \_ \_ = feet / inches
+
+            -   For example: 511 would correspond to 5 ft 11 inches
+
+        -   7777 = Don't know/Not sure
+
+        -   9061-9998 = Height (meters/centimeters) Notes: The initial '9' indicates this was a metric value. 9 \_ / \_ \_ = meters / centimeters
+
+            -   For example: 9180 would correspond to 1 meter 80 centimeters, and since 1 meter = 100 centimeters, this would be equivalent to 180 centimeters (for ease of conversion to inches later)
+
+        -   9999 = Refused
+
+        -   BLANK/NA = Not asked or Missing
+
+    #### Calculations for New Variable: `HEIGHT_IN`
+
+    -   Since there are standard and metric units used in the responses of `HEIGHT3`, I will use `HEIGHT3` to create a new variable, `HEIGHT_IN`, where I will convert all measured heights to inches.
+
+        -   To convert the standard units (ft/inches) to inches I will separate the value of `HEIGHT3` into 2 parts: a piece to calculate the number of feet and a piece to calculate the remaining inches.
+
+            -   Number of feet = `(HEIGHT3 %/% 100 * 12)`. In this code I am taking the value from `HEIGHT3` and dividing by 100. The `%/%` drops any remainder and returns an integer quotient. I then multiply by 12 to convert the number of feet to inches (1 ft = 12 in).
+
+            -   Remaining number of inches = `(HEIGHT3 - x)` where *x* = 200, 300, 400, 500, 600, or 700. In this code I am taking the value of `HEIGHT3` and subtracting the value of x that corresponds to the number in the hundreds place of `HEIGHT3`. This will give me the remaining number of inches.
+
+            -   Finally, I will add the two results together to get the total number of inches to be stored in the `HEIGHT_IN` column.
+
+                -   `(HEIGHT3 %/% 100 * 12) + (HEIGHT3 - x)`
+
+                -   For example, if the values of `HEIGHT3` were 409 and 610, the following code would be used:
+
+                    -   (409 %/% 100 \* 12) + (409 - 400) = (4 \* 12) + (9) = 57 in
+
+                    -   (610 %/% 100 \*12) + (610 - 600) = (6 \*12) + (10) = 82 in
+
+        -   To convert the metric units (m/cm) to inches I will start by subtracting 9000 to leave me with the number of meters and centimeters. Since the metric system is base 10, that will actually leave me with the number of centimeters (1 m = 100 cm, 1 m 54 cm = 154 cm). I will then multiply the number of centimeters by the cm to inches conversion factor of 0.394 and round answers to 2 decimal places.
+
+            -   `round(((HEIGHT3 - 9000) * 0.394), 2)))`
+
+                -   For example, if the value in `HEIGHT3` is 9180, the following code would be used:
+
+                    -   round(((9180 - 9000) \* 0.394), 3)) = round(((180) \* 0.394), 2)) = round(70.92) = 70.92 inches
+
+#### Variable: `WEIGHT2`
+
+-   `WEIGHT2` answers the question, "About how much do you weight without shoes?"
+
+    -   Below are the levels of the `WEIGHT2` variable:
+
+        -   50-0776 = Weight (pounds) Notes: 0 \_ \_ \_ = weight in pounds
+
+        -   7777 = Don't know/Not sure
+
+        -   9023-9352 = Weight (kilograms) Notes: The initial '9' indicates this was a metric value. 9 \_ \_ \_ = weight in kilograms
+
+        -   9999 = Refused
+
+        -   BLANK/NA = Not asked or Missing
+
+    #### Calculations for New Variable: `WEIGHT_LB`
+
+    -   Since there are standard and metric units used in the responses of `WEIGHT2`, I will use `WEIGHT2` to create a new variable, `WEIGHT_LB`, where I will convert all measured weights to pounds.
+
+        -   To values 50-0776 will not need conversion and already represent a weight in pounds.
+
+        -   To convert the metric values to pounds I will subtract 9000 and multiply by the kg to lbs conversion factor 2.205. I will then round all values to 2 decimal places and the new values will be placed in the `WEIGHT_LB` column.
+
+            -   `round((WEIGHT2 - 9000) * 2.205, 2))`
+
+            -   For example, if the value in `WEIGHT2` is 9075, the following code would be used:
+
+                -   round((9075 - 9000) \* 2.205, 2) = round((75) \* 2.205, 2) = round(165.375, 2) = 165.38 lbs
+
+#### Variable: `FRENCHF1`
+
+-   `FRENCHF1` answers the question, "How often do you eat any kind of fried potatoes, including french fries, home fries, or hash browns?
+
+    -   Below are the levels of the `FRENCHF1` variable:
+
+        -   101-199 = Days (Notes: 1 \_ \_ per Day)
+
+        -   201-299 = Weeks (Notes: 2 \_ \_ per Week)
+
+        -   300 = Less than once a month
+
+        -   301-399 = Month (Notes: 3 \_ \_ per Month)
+
+        -   555 = Never
+
+        -   777 = Don't know/Not Sure
+
+        -   999 = Refused
+
+        -   BLANK/NA = Not asked or Missing
+
+    #### Calculations for New Variable: `FRY_DAY`
+
+    -   I will use `FRENCHF1` to create a new variable, `FRY_DAY` that calculates the number of fried potatoes eaten per day. The following conversions will be used:
+
+        -   Days = `round(FRENCHF1 - 100, 2)`
+
+            -   This conversion will subtract 100 to eliminate the prefix 100 and leave the number of fried potatoes per day rounded to 2 decimal places.
+
+        -   Weeks = `round((FRENCHF1 - 200) / 7, 2)`
+
+            -   This conversion will subtract 200 to eliminate the prefix 200 and leave the number of fried potatoes per week. I will then divide by 7 to convert the value to fried potatoes per day and round to 2 decimal places.
+
+        -   Month = `round((FRENCHF1 - 300) / 30, 2)`
+
+            -   This conversion will subtract 300 to eliminate the prefix 300 and leave the number of fried potatoes per month. I will then divide by 30 to convert the value to fried potatoes per day and round to 2 decimal places.
+
+        -   Less than once a month = 0.02
+
+            -   Since once per month would be about 0.03 (1/30), I will use 0.02 as the value to represent less than once a month.
+
+        -   Never = 0
+
+            -   If a respondent never eats fried potatoes, his/her value will be represented by a 0.
+
+        -   I chose to calculate fried potatoes eaten per day so I could compare make accurate comparisons between each respondent. I wanted to be able to compare apples to apples, if you will.
+
+#### Variable: `FVGREEN1`
+
+-   `FVGREEN1` answers the question, "How often do you eat a green leafy or lettuce salad, with or without other vegetables?"
+
+    -   The levels for `FVGREEN1` are the same as `FRENCHF1`.
+
+#### Calculations for New Variable: `SALAD_DAY`
+
+-   I will use `FVGREEN1` to create a new variable, `SALAD_DAY` that calculates the number of salads eaten per day. The conversions used will be the same that were used to calculate `FRY_DAY`
+-   I chose to calculate salads eaten per day so I could compare make accurate comparisons between each respondent. I wanted to be able to compare apples to apples, if you will.
+
+#### How the Variables Will be Used
+
+-   I will be using my 4 newly created variables (`HEIGHT_IN`, `WEIGHT_LB`, `FRY_DAY`, and `SALAD_DAY`) to run statistical analysis and regression to try and predict a person's weight in pounds (`WEIGHT_LB`) by his/her height in inches (`HEIGHT_IN`), the number of fried potatoes he/she eats per day (`FRY_DAY`), and the number of salads he/she eats per day (`SALAD_DAY`). I chose these variables because they pertain to my life. I love french fries and, oddly enough, a good salad. I wanted to see if I could predict a person's weight based on these factors so I could see if there was any justification for me to eat more french fries.
+
+#### Values to be Dropped
+
+-   I will be dropping all values that represent a response of "Don't Know/Not sure" or "Refused." I will also be dropping any missing or NA values. After comparing the number of respondents in the original dataset (438,693) and the number of respondents after dropping the indicated values (364,201) I determined I still had a large amount of data to do my analysis. I toyed with the idea of imputing the median instead of dropping values but data imputation is a tricky science and replacing missing values with a measure of center, like the mean or median, may not be the best choice here.
+
+-   In the Q11 Code Block, I chose to filter and mutate each variable separately to make the code easier to read and, honestly, for my own sanity. This made it easier for me to stay organized and more efficient to debug any issues.
+
+### Q12
+
+Remove any outliers for each applicable variable. Make sure you are updating the dataset from Q11 and using this dataset for the remainder of the questions. Briefly explain why you chose the method you used in the *Q12 Discussion* section. Within your code chunk, provide comments explaining what your code is doing.
+
+#### Q12 Part 1: Investigation and Removal of Outliers for `HEIGHT_IN`
+
+```{r}
+### Do not edit the following line. It is used by CodeGrade.
+# CG Q12 # 
+
+### TYPE YOUR CODE BELOW ###
+# Q12 Part 1A: Investigation of the HEIGHT_IN variable
+
+# Look at a basic Boxplot for HEIGHT_IN
+# Looks like there are several outliers to be removed
+# Looks relatively symmeric... possibly normal?
+height_box.12.1A <-brf4 |>
+ggplot(aes(x = HEIGHT_IN)) + 
+  geom_boxplot() + 
+  labs(title = "Height Boxplot", x = "Height (inches)") + # give plot title and label x-axis
+  theme(plot.title = element_text(hjust = 0.5)) # center the main title
+
+height_box.12.1A
+
+# Look at a basic histogram for HEIGHT_IN
+# Looks like the data is roughly normally distributed
+height_hist.12.1A <- brf4 |>
+  ggplot(aes(x = HEIGHT_IN)) +
+  geom_histogram() + 
+  labs(title = "Height Histogram", x = "Height (inches)", y = "Count") + # give plot title and label axes
+  theme(plot.title = element_text(hjust = 0.5)) # center the main title
+
+height_hist.12.1A
+
+# Look at Q-Q plot for HEIGHT_IN
+# Based on the Q-Q plot, looks like the data is symmetric and roughly normal
+height_qq <- qqnorm(brf4$HEIGHT_IN)
+height_qq_line <- qqline(brf4$HEIGHT_IN, col = "red")
+height_qq
+height_qq_line
+```
+
+```{r}
+# Q12 Part 1B: Removal of outliers for HEIGHT_IN using 3SD Method
+
+# Find all values more than 3 SDs to the left (0.3% -> 0.003 -> 0.003/2 = 0.0015)
+height_lower_bound <- quantile(brf4$HEIGHT_IN, 0.0015, na.rm = TRUE)
+
+# Find all values more than 3 SDs to the right (1 - 0.0015 = 0.9985)
+height_upper_bound <- quantile(brf4$HEIGHT_IN, 0.9985, na.rm = TRUE)
+
+# Remove values more than 3 SDs away (on either side)
+brf4 <- brf4 |> 
+  filter(
+    HEIGHT_IN >= height_lower_bound,
+    HEIGHT_IN <= height_upper_bound
+  )
+
+brf4
+
+# Look at boxplot of HEIGHT_IN now that ouliers have been removed
+# New boxplot looks very symmetric
+# No remaining outliers
+height_box.12.1B <- brf4 |>
+  ggplot(aes(x = HEIGHT_IN)) + 
+  geom_boxplot() + 
+  labs(title = "Height Boxplot After Outlier Removal", x = "Height (inches)") + # give plot title and label x-axis
+  theme(plot.title = element_text(hjust = 0.5)) # center the main title
+
+height_box.12.1B
+```
+
+#### Q12 Part 2: Investigation and Removal of Outliers for `WEIGHT_LB`
+
+```{r}
+# Q12 Part 2A: Investigation of the WEIGHT_LB variable
+
+# Look at a basic Boxplot for WEIGHT_LB
+# Looks like there are several outliers to be removed
+weight_box.12.2A <- brf4 |>
+ggplot(aes(x = WEIGHT_LB)) + 
+  geom_boxplot() + 
+  labs(title = "Weight Boxplot", x = "Weight (pounds)") + # give plot title and label x-axis
+  theme(plot.title = element_text(hjust = 0.5)) # center the main title
+
+weight_box.12.2A
+
+# Look at a basic histogram for WEIGHT_LB
+# Looks like the data has a tail to the right so might be a little right skewed
+weight_hist.12.2A <- brf4 |>
+  ggplot(aes(x = WEIGHT_LB)) +
+  geom_histogram() + 
+  labs(title = "Weight Histogram", x = "Weight (pounds)", y = "Count") + # give plot title and label axes
+  theme(plot.title = element_text(hjust = 0.5)) # center the main title
+
+weight_hist.12.2A
+
+# Look at Q-Q plot for WEIGHT_LB
+# Based on the Q-Q plot, looks like data is a little right skewed
+weight_qq <- qqnorm(brf4$WEIGHT_LB)
+weight_qq_line <- qqline(brf4$WEIGHT_LB, col = "red")
+weight_qq
+weight_qq_line
+```
+
+```{r}
+# Q12 Part 2B: Removal of outliers for WEIGHT_LB
+
+# Remove outliers using the 1.5IQR Method
+
+# Create the upper fence for WEIGHT_LB (values 1.5*IQR above the 3rd quartile)
+weight_upper_fence <- quantile(brf4$WEIGHT_LB, 0.75) + (1.5 * IQR(brf4$WEIGHT_LB))
+
+# Create the lower fence WEIGHT_LB (values 1.5*IQR below the 1st quartile)
+weight_lower_fence <- quantile(brf4$WEIGHT_LB, 0.25) - (1.5 * IQR(brf4$WEIGHT_LB))
+
+# Filter out weights above upper fence and below lower fence (remove outliers)
+brf4 <- brf4 |> 
+  filter(WEIGHT_LB >= weight_lower_fence,
+         WEIGHT_LB <= weight_upper_fence
+        )
+
+# Look at boxplot of WEIGHT_LB now that ouliers have been removed
+# New boxplot looks very symmetric
+# Still has a few outliers remaining but most have been removed
+weight_box.12.2B <- brf4 |>
+  ggplot(aes(x = WEIGHT_LB)) + 
+  geom_boxplot() +
+  labs(title = "Weight Boxplot After Outlier Removal", x = "Weight (pounds)") + # give plot title and label x-axis
+  theme(plot.title = element_text(hjust = 0.5)) # center the main title
+
+weight_box.12.2B
+```
+
+#### Q12 Part 3: Investigation and Removal of Outliers for `FRY_DAY`
+
+```{r}
+# Q12 Part 3A: Investigation of the FRY_DAY variable
+
+# Look at a basic Boxplot for FRY_DAY
+# Can't really tell much from boxplot other than it looks like there are several outliers to be removed
+  # Some outliers could be entry error? Someone is not eating fried potatoes 50 or 90ish times per day.... right?
+fry_box.12.3A <- brf4 |>
+  ggplot(aes(x = FRY_DAY)) + 
+  geom_boxplot() + 
+  labs(title = "Fried Potatoes Eaten Per Day Boxplot", x = "Fried Potatoes Eaten Per Day") + # give plot title and label x-axis
+  theme(plot.title = element_text(hjust = 0.5)) # center the main title
+
+fry_box.12.3A
+
+# Look at a basic histogram for FRY_DAY
+# Really hard to tell anything with so many outliers on the high end and so many values between 0 and 1
+fry_hist.12.3A <- brf4 |>
+  ggplot(aes(x = FRY_DAY)) + 
+  geom_histogram(binwidth = 1) +
+  labs(title = "Fried Potatoes Eaten Per Day Histogram", x = "Fried Potatoes Eaten Per Day", y = "Count") + # give plot title and label axes
+  theme(plot.title = element_text(hjust = 0.5)) # center the main title
+
+fry_hist.12.3A
+
+# Look at Q-Q plot for FRY_DAY
+# Based on Q-Q plot, looks like data has a heavy right tail and is not normally distributed
+fry_qq <- qqnorm(brf4$FRY_DAY)
+fry_qq_line <- qqline(brf4$FRY_DAY, col = "red")
+fry_qq
+fry_qq_line
+```
+
+```{r}
+# Q12 Part 3B: Removal of outliers for FRY_DAY
+
+# Remove outliers that are more than 6 times per day (keep those that are 6 or less)
+brf4 <- brf4 |>
+  filter(FRY_DAY <= 6)
+
+# Look at boxplot of FRY_DAY now that ouliers have been removed
+# There are still outliers based on the 1.5IQR Rule but I think these could be legitimate responses
+fry_box.12.3B <- brf4 |>
+  ggplot(aes(x = FRY_DAY)) + 
+  geom_boxplot() + 
+  labs(title = "Fried Potatoes Eaten Per Day After Outlier Removal", x = "Fried Potatoes Eaten Per Day") + # give plot title and label x-axis
+  theme(plot.title = element_text(hjust = 0.5)) # center the main title
+
+fry_box.12.3B
+```
+
+#### Q12 Part 4: Investigation and Removal of Outliers for `SALAD_DAY`
+
+```{r}
+# Q12 Part 4A: Investigation of the SALAD_DAY variable
+
+# Look at a basic Boxplot for SALAD_DAY
+# Can't really tell much from boxplot other than it looks like there are several outliers to be removed
+  # Some outliers could be entry error? Someone is not eating salads 50 or 90ish times per day.... right?      # Same issue as FRY_DAY
+salad_box.12.4A <- brf4 |>
+  ggplot(aes(x = SALAD_DAY)) + 
+  geom_boxplot() + 
+  labs(title = "Salads Eaten Per Day Boxplot", x = "Salads Eaten Per Day") + # give plot title and label x-axis
+  theme(plot.title = element_text(hjust = 0.5)) # center the main title
+
+salad_box.12.4A
+
+# Look at a basic histogram for SALAD_DAY
+# Really hard to tell anything with so many outliers on the high end
+salad_hist.12.4A <- brf4 |>
+  ggplot(aes(x = SALAD_DAY)) + 
+  geom_histogram(binwidth = 1) + 
+  labs(title = "Salads Eaten Per Day Histogram", x = "Salads Eaten Per Day", y = "Count") + # give plot title and label axes
+  theme(plot.title = element_text(hjust = 0.5)) # center the main title
+
+salad_hist.12.4A
+
+# Look at Q-Q plot for SALAD_DAY
+# Based on Q-Q plot, looks like data has a heavy right tail and is not normally distributed
+salad_qq <- qqnorm(brf4$SALAD_DAY)
+salad_qq_line <- qqline(brf4$SALAD_DAY, col = "red")
+salad_qq
+salad_qq_line
+```
+
+```{r}
+# Q12 Part 4B: Removal of outliers for SALAD_DAY
+
+# Remove outliers that are more than 6 times per day (keep those that are 6 or less)
+brf4 <- brf4 |>
+  filter(SALAD_DAY <= 6)
+
+# Look at boxplot of SALAD_DAY now that ouliers have been removed
+# There are still outliers based on the 1.5IQR Rule but I think these could be legitimate responses
+salad_box.12.4B <- brf4 |>
+  ggplot(aes(x = SALAD_DAY)) + 
+  geom_boxplot() + 
+  labs(title = "Salads Eaten Per Day After Outlier Removal", x = "Salads Eaten Per Day") + # give plot title and label x-axis
+  theme(plot.title = element_text(hjust = 0.5)) # center the main title
+
+salad_box.12.4B
+```
+
+### Q12 Discussion:
+
+Q12 Part 1 Discussion: `HEIGHT_IN`
+
+-   The boxplot (height_box.12.1A) looks pretty symmetric so this lends to the idea that the data could *possibly* be normally distributed. To determine if the data is apprimately normal I looked at the histogram (height_hist.12.1A) and Q-Q plot (height_qq) for `HEIGHT_IN`. The histogram reveals a pretty good bell-shaped curve and majority of the points in the Q-Q plot lie on the trend line. Based on these observations, I have concluded `HEIGHT_IN` to be approximately normally distributed. Because of this approximately normal distribution, I will remove outliers from `HEIGHT_IN` using the 3 standard deviation rule. Any value that it more than 3 standard deviations above or below the mean will be deemed an outlier and removed. Since approximately 99.7% of data falls within 3 standard deviations of the mean, about 0.3% of data will be removed.
+
+Q12 Part 2 Discussion: `WEIGHT_LB`
+
+-   The boxplot (weight_box12.2A) shows many outliers on the upper end of the data. The histogram (weight_hist.12.2A) has a tail on the right so it seems to indicate the data is right skewed. In the Q-Q plot (weight_qq) there is a significant number of points above the trend line on the right end of the data. This indicates the data could have a heavy right tail with many outliers. Based on these observations, I have concluded `WEIGHT_LB` is not approximately normally distributed. Because of the lack of normality, I will remove outliers from `WEIGHT_LB` using the 1.5IQR rule. Any value that is more than 1.5 \* IQR above the 3rd quantile or 1.5 \* IQR below the 1st quantile will be deemed an outlier and removed.
+
+Q12 Part 3 Discussion: `FRY_DAY`
+
+-   The boxplot (fry_box12.3A) doesn't reveal much other than there are a significant number of outliers on the high end of the data. Some of these seem to be possible entry errors. According to the boxplot, someone ate fried potatoes 50 times per day and multiple other people ate over 90 times per day. This doesn't seem legitimate. Since there are so many values between 0 and 1 along with those high outliers, the histogram (fry_hist.12.3A) doesn't reveal much either. In the Q-Q plot (fry_qq) there is a significant number of points above the trend line on the right end of the data. This indicates the data could have a heavy right tail with many outliers. Based on these observations, I have concluded `FRY_DAY` is not normally distributed. Because of the lack of normality, I initially thought of using the 1.5IQR rule to remove outliers. After trying this method, I thought it removed too many values. So I decided to think about what would be, potentially, the most times per day the average adult would eat fried potatoes. After some Googling and reading, I came across this article titled, "Snacking Consumption Among Adults in the United States: A Scoping Review" through the National Library of Medicine, linked [here](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC10097271/). In this article, they say, on average an adult eats 3 meals per day and between 1.5 to 3 snacks per day. I decided to take the high end of this estimate and say that the average adult could potentially eat fried potatoes up to 6 times per day. Because of this, I will remove all instances of fried potatoes per day that are above 6 and keep those instances that are 6 and below.
+
+Q12 Part 4 Discussion: `SALAD_DAY`
+
+-   The boxplot (salad_box.12.4A) doesn't reveal much other than there are a significant number of outliers on the high end of the data. Some of these seem to be possible entry errors just like in `FRY_DAY`. Since there are so many values between 0 and 1 along with those high outliers, the histogram (salad_hist.12.4A) doesn't reveal much either. In the Q-Q plot (salad_qq) there is a significant number of points above the trend line on the right end of the data. This indicates the data could have a heavy right tail with many outliers. Based on these observations, I have concluded `SALAD_DAY` is not normally distributed. Because `SALAD_DAY` is representing the number of times a respondent eats a salad per day, I will handle outliers in the same way I did for `FRY_DAY`. I will remove all instances of salads per day that are above 6 and keep those instance that are 6 and below.
+
+### Q13
+
+Complete exploratory analyses (for each variable) doing appropriate visualizations with ggplot2. Include visualizations that incorporate a combination of your variables within one plot. Provide an organized discussion of your observations for each of the plots in the *Q13 Discussion* section below.
+
+#### Univariate: Exploring `HEIGHT_IN`
+
+```{r}
+### Do not edit the following line. It is used by CodeGrade.
+# CG Q13 # 
+
+### TYPE YOUR CODE BELOW ###
+
+# Check out more detailed histogram for HEIGHT_IN now that outliers have been removed
+height_hist.13 <- brf4 |>
+  ggplot(aes(x = HEIGHT_IN)) +
+  geom_histogram(aes(y = after_stat(density)), binwidth = 1, fill = "blue", color = "black", alpha = 0.7) + 
+  stat_function(fun = dnorm, color = "red", args = list(mean = mean(brf4$HEIGHT_IN), sd = sd(brf4$HEIGHT_IN))) + # add in a normal distribution curve for reference
+  labs(title = "Height Distribution", x = "Height (inches)", y = "Density") + # give plot title and label axes
+  theme(plot.title = element_text(hjust = 0.5)) # center the main title
+
+height_hist.13
+
+# Check out boxplot for HEIGHT_IN now that ouliers have been removed
+height_box.13 <- brf4 |>
+  ggplot(aes(x = HEIGHT_IN)) +
+  geom_boxplot() +
+  labs(title = "Height Boxplot", x = "Height (inches)") + # give plot title and label axes
+  theme(plot.title = element_text(hjust = 0.5)) # center the main title
+
+height_box.13
+```
+
+#### Univariate: Exploring `WEIGHT_LB`
+
+```{r}
+# Check out more detailed histogram for WEIGHT_LB now that outliers have been removed
+weight_hist.13 <- brf4 |>
+  ggplot(aes(x = WEIGHT_LB)) +
+  geom_histogram(aes(y = after_stat(density)), binwidth = 10, fill = "white", color = "black", alpha = 0.7) + 
+  stat_function(fun = dnorm, color = "red", args = list(mean = mean(brf4$WEIGHT_LB), sd = sd(brf4$WEIGHT_LB))) + # add in a normal distribution curve for reference
+  labs(title = "Weight Distribution", x = "Weight (pounds)", y = "Density") + # give plot title and label axes
+  theme(plot.title = element_text(hjust = 0.5)) # center the main title
+
+weight_hist.13
+
+# Check out boxplot for WEIGHT_LB
+weight_box.13 <- brf4 |>
+  ggplot(aes(x = WEIGHT_LB)) + 
+  geom_boxplot() +
+  labs(title = "Weight Boxplot", x = "Weight (pounds)") + # give plot title and label axes
+  theme(plot.title = element_text(hjust = 0.5)) # center the main title
+
+weight_box.13
+```
+
+#### Univariate: Exploring `FRY_DAY`
+
+```{r}
+# Check out more detailed histogram for FRY_DAY now that ouliers have been removed
+fry_hist.13 <- brf4 |>
+  ggplot(aes(x = FRY_DAY)) +
+  geom_histogram(binwidth = 0.1, fill = "gold", color = "black", alpha = 0.7) +
+  stat_function(fun = dnorm, color = "red", args = list(mean = mean(brf4$FRY_DAY), sd = sd(brf4$FRY_DAY))) + # add in a normal distribution curve for reference
+  labs(title = "Fried Potatoes Eaten per Day Distribution", x = "Fried Potatoes Eaten per Day", y = "Density") + # give plot title and label axes
+  theme(plot.title = element_text(hjust = 0.5)) # center the main title
+
+fry_hist.13
+
+# Check out boxplot for FRY_DAY
+fry_box.13 <- brf4 |>
+  ggplot(aes(x = FRY_DAY)) +
+  geom_boxplot() +
+  labs(title = "Fried Potatoes Eaten Per Day Boxplot", x = "Fried Potatoes Eaten Per Day") + # give plot title and label axes
+  theme(plot.title = element_text(hjust = 0.5)) # center the main title
+
+fry_box.13
+```
+
+#### Univariate: Exploring `SALAD_DAY`
+
+```{r}
+# Check out more detailed histogram for SALAD_DAY now that outliers have been removed
+salad_hist.13 <- brf4 |>
+  ggplot(aes(x = SALAD_DAY)) +
+  geom_histogram(binwidth = 0.1, fill = "darkgreen", color = "black", alpha = 0.7) + 
+  stat_function(fun = dnorm, color = "red", args = list(mean = mean(brf4$FRY_DAY), sd = sd(brf4$FRY_DAY))) + # add in a normal distribution curve for reference
+  labs(title = "Salads Eaten per Day Distribution", x = "Salads Eaten per Day", y = "Density") + # give plot title and label axes
+  theme(plot.title = element_text(hjust = 0.5)) # center the main title
+  
+salad_hist.13
+
+# Check out boxplot for SALAD_DAY
+salad_box.13 <- brf4 |>
+  ggplot(aes(x = SALAD_DAY)) +
+  geom_boxplot() + 
+  labs(title = "Salads Eaten Per Day Boxplot", x = "Salads Eaten Per Day") + # give plot title and label axes
+  theme(plot.title = element_text(hjust = 0.5)) # center the main title
+
+salad_box.13
+```
+
+#### Bivariate: Exploring `WEIGHT_LB` vs Other Variables
+
+```{r}
+# Look at scatterplot of WEIGHT_LB vs HEIGHT_IN
+scatter_heightvweight <- brf4 |>
+  ggplot(aes(x = HEIGHT_IN, y = WEIGHT_LB)) +
+  geom_point(alpha = 0.5, color = "blue") +
+  geom_smooth(method = "lm", se = FALSE, color = "red") + # add in trend line
+  labs(title = "Height vs. Weight Scatterplot with Trend Line",
+       x = "Height (inches)",
+       y = "Weight (lbs)") + # give plot title and label axes
+  xlim(50, 80) + # set start and stop values for x-axis
+  ylim(50, 325) + # set start and stop values for y-axis
+  theme(plot.title = element_text(hjust = 0.5)) # center the main title
+
+scatter_heightvweight
+```
+
+```{r}
+# Look at scatterplot of WEIGHT_LB vs FRY_DAY
+scatter_fryvweight <- brf4 |>
+  ggplot(aes(x = FRY_DAY, y = WEIGHT_LB)) +
+  geom_point(alpha = 0.5, color = "gold") +
+  geom_smooth(method = "lm", se = FALSE, color = "red") + # add in trend line
+  labs(title = "Fried Potatoes per Day vs. Weight Scatterplot with Trend Line",
+       x = "Fried Potatoes per Day",
+       y = "Weight (lbs)") + # give plot title and label axes
+  xlim(0, 7) + # set start and stop values for x-axis
+  ylim(50, 325) + # set start and stop values for y-axis
+  theme(plot.title = element_text(hjust = 0.5)) # center the main title
+
+scatter_fryvweight
+```
+
+```{r}
+# Look at scatterplot of WEIGHT_LB vs SALAD_DAY
+scatter_saladvweight <- brf4 |>
+  ggplot(aes(x = SALAD_DAY, y = WEIGHT_LB)) +
+  geom_point(alpha = 0.5, color = "darkgreen") +
+  geom_smooth(method = "lm", se = FALSE, color = "red") + # add in trend line
+  labs(title = "Salads per Day vs. Weight Scatterplot with Trend Line",
+       x = "Salads per Day",
+       y = "Weight (lbs)") + # add title and label axes
+  xlim(0, 7) + # set start and stop values for x-axis
+  ylim(50, 325) + # set start and stop values for y-axis
+  theme(plot.title = element_text(hjust = 0.5)) # center main title
+  
+
+scatter_saladvweight
+```
+
+### Q13 Discussion:
+
+#### Univariate Discussion
+
+-   Based on the histograms for `HEIGHT_IN` (height_hist.13) and `WEIGHT_IN` (weight_hist.13), they both seem to be approximately normally distributed. In both histograms, the distributions seem to follow the red normal curve pretty closely. According to their respective histograms, the mode for height is around 66 inches and the mode for weight is around 180 pounds.
+-   Based on the histograms for `FRY_DAY` (fry_hist.13) and `SALAD_DAY` (salad_hist.13), they both seem to not be normally distributed. According to their respective histograms, the mode for `FRY_DAY` is around 0.10 fried potatoes eaten per day and the mode for `SALAD_DAY` is around 0.10 salads eaten per day.
+
+#### Bivariate Discussion
+
+-   `HEIGHT_IN` vs `WEIGHT_LB`: scatter_heightvweight
+
+    -   A linear model was used to produce the red trend line shown in the scatterplot. The trend line shown in the scatterplot has a positive slope, indicating a positive correlation between height and weight. As height increases, weight will also generally increase. There are many deviations from this trend line, suggesting there could be other factors affecting weight, maybe diet. Each height has a wide spread of weight values. This suggests there is sizable variability in weight for those individuals with the same height. The plot also shows a higher density of points between 60-70 inches and 100-200 pounds, indicating that most of the respondents fall within these ranges of height and weight.
+
+-   `FRY_DAY` vs `WEIGHT_LB`: scatter_fryvweight
+
+    -   A linear model was used to produce the red trend line shown in the scatterplot. The trend line shown in the scatterplot has a positive slope, indicating a positive correlation between fried potatoes eaten per day and weight. As the number of fried potatoes eaten per day increases, generally, weight will also increase. There are also many deviations from this trend line, indicating there could be other factors affecting weight. The plot shows a higher density of points for those individuals who eat fewer fried potatoes per day, indicating that most of the respondents eater fewer fried potatoes per day.
+
+-   `SALAD_DAY` vs `WEIGHT_LB`: scatter_saladvweight
+
+    -   A linear model was used to produce the red trend line shown in the scatterplot. The trend line shown in the scatterplot has a negative slope, indicating a negative correlation between salads eaten per day and weight. As the number of salads eaten per day increases, generally, weight will decrease. There are also many deviations from this trend line, indicating there could be other factors affecting weight. The plot shows a higher density of points for those individuals who eat fewer salads per day, indicating that most of the respondents eater fewer salads per day.
+
+### Q14
+
+Run all of the appropriate basic descriptive statistics for each of your variables. What do these statistics reveal? Be sure to address each variable in the "Q14 Discussion" below.
+
+#### Descriptive Statistics for `HEIGHT_IN`
+
+```{r}
+### Do not edit the following line. It is used by CodeGrade.
+# CG Q14 # 
+
+### TYPE YOUR CODE BELOW ###
+# Look at the summary for HEIGHT_IN
+height_summary <- round(summary(brf4$HEIGHT_IN), 2)
+height_summary
+
+
+# Find standard deviation of HEIGHT_IN
+height_sd <- round(sd(brf4$HEIGHT_IN), 2)
+cat("SD of HEIGHT_IN:", height_sd)
+```
+
+#### Descriptive Statistics for `WEIGHT_LB`
+
+```{r}
+# Look at summary for WEIGHT_LB
+weight_summary <- round(summary(brf4$WEIGHT_LB), 2)
+weight_summary
+
+# Find standard deviation of WEIGHT_LB
+weight_sd <- round(sd(brf4$WEIGHT_LB), 2)
+cat("SD of WEIGHT_LB:", weight_sd)
+```
+
+#### Descriptive Statistics for `FRY_DAY`
+
+```{r}
+# Look at summary for FRY_DAY
+fry_summary <- round(summary(brf4$FRY_DAY), 2)
+fry_summary
+
+# Find standard deviation of FRY_DAY
+fry_sd <- round(sd(brf4$FRY_DAY), 2)
+cat("SD of FRY_DAY:", fry_sd)
+```
+
+#### Descriptive Statistics for `SALAD_DAY`
+
+```{r}
+# Look at summary for SALAD_DAY
+salad_summary <- round(summary(brf4$SALAD_DAY), 2)
+salad_summary
+
+# Find standard deviation of SALAD_DAY
+salad_sd <- round(sd(brf4$SALAD_DAY), 2)
+cat("SD of SALAD_DAY:", salad_sd)
+
+
+```
+
+#### Correlation Matrix for All Variables
+
+```{r}
+# Create a correlation matrix to check correlation of each pair of variables
+corr_matrix <- cor(brf4)
+corr_matrix
+```
+
+### Q14 Discussion:
+
+The statistical summary for `HEIGHT_IN` reveals the following:
+
+-   The mean and median, 67.05 and 67.00 respectively, are extremely close, indicating the distribution of heights should be relatively symmetric. The 1st Quartile of 64 and 3rd Quartile of 70 tells us that 25% of heights are below 64 inches and 25% of heights are above 70 inches. This leaves the middle 50% of the heights to fall in that 64-70 inch range.
+
+-   The standard deviation of 4.1 indicates that most individuals heights fall about 4 inches from the mean. So, most individuals (about 68%) will range from about 63 inches to 71 inches in height, which is backed up by the higher density of points in the `scatter_heightvweight` scatterplot being in the 60-70 inch range.
+
+The summary for `WEIGHT_LB` reveals the following:
+
+-   The mean and median, 180.9 and 177 respectively, are close, indicating the distribution of weights should be relatively symmetric. The 1st Quartile of 150 and 3rd Quartile of 206 tells us that 25% of weights are below 150 pounds and 25% of weights are above 206 pounds. This leaves the middle 50% of the weights to fall in that 150-206 pound range.
+
+-   The standard deviation of 42.1 indicates that most individuals weights fall about 42 pounds from the mean. So, most individuals (about 68%) will range from about 138 to 222 pounds in weight, which is backed up by the higher density of points in the `scatter_heightvweight` scatterplot being in the 100-200 pound range.
+
+The summary of `FRY_DAY` reveals the following:
+
+-   The mean and median, 0.22 and 0.14 respectively, are close, indicating the distribution of weights should be relatively symmetric. The 1st Quartile of 0.03 and 3rd Quartile of 0.29 tells us that 25% of respondents eat fried potatoes fewer than 0.03 times per day and 25% of respondents eat them more than 0.29 times per day. This leaves the middle 50% of the respondents eating them in the range of 0.03 to 0.29 times per day.
+
+-   The standard deviation of 0.32 indicates that most individuals eat fried potatoes about 0.32 times per day more or less than the mean. So, most individuals (about 68%) will range from eating fried potatoes about -0.10 (so, 0 times per day) to 0.54 times per day , which is backed up by the higher density of points in the `scatter_fryvweight` scatterplot being in the 0-0.5 times per day range.
+
+The summary for `SALAD_DAY` reveals the following:
+
+-   The mean and median, 0.43 and 0.52 respectively, are close, indicating the distribution of weights should be relatively symmetric. The 1st Quartile of 0.14 and 3rd Quartile of 0.71 tells us that 25% of respondents eat salads fewer than 0.14 times per day and 25% of respondents eat them more than 0.71 times per day. This leaves the middle 50% of the respondents eating them in the range of 0.14 to 0.71 times per day.
+
+-   The standard deviation of 0.55 indicates that most individuals eat salads about 0.55 times per day more or less than the mean. So, most individuals (about 68%) will range from eating salads about -0.09 (so, 0 times per day) to 0.98 times per day , which is backed up by the higher density of points in the `scatter_saladvweight` scatterplot being in the 0-1 times per day range.
+
+The correlation matrix reveals the following:
+
+-   Based on the values in the matrix, `HEIGHT_IN` and `WEIGHT_LB` have the strongest correlation since their value of r is the largest (in magnitude) at 0.4841. `WEIGHT_LB` and `FRY_DAY` have the next highest correlation at 0.0878. `WEIGHT_LB` and `SALAD_DAY` have the weakest correlation at -0.0656; it is also the only negative correlation indicating the more salads eaten per day will cause weight to decrease.
+
+### Q15
+
+Finally, run at least 2 different, appropriate regressions predicting the variable you indicated in Q11. These regressions should use different predictor(s). Organize and explain your code within the code chunk using comments. Identify the best model and provide a discussion of your observations in the *Q15 Discussion* section provided below. Be organized and detailed in your discussion.
+
+```{r}
+### Do not edit the following line. It is used by CodeGrade.
+# CG Q15 # 
+
+### TYPE YOUR CODE BELOW ###
+# Run multiple linear regressions adding in one of the variables at a time as a predictor to help compare and assess the models
+
+# Run a linear regression using HEIGHT_IN to predict WEIGHT_LB
+weight_mod1 <- lm(WEIGHT_LB ~ HEIGHT_IN, data = brf4)
+
+# Run a linear regression using HEIGHT_IN & FRY_DAY to predict WEIGHT_LB
+weight_mod2 <- lm(WEIGHT_LB ~ HEIGHT_IN + FRY_DAY, data = brf4)
+
+# Run a linear regression using HEIGHT_IN, FRY_DAY, & SALAD_DAY to predict WEIGHT_LB
+weight_mod3 <- lm(WEIGHT_LB ~ HEIGHT_IN + FRY_DAY + SALAD_DAY, data = brf4)
+
+# Run the summary of each model to compare them
+weight_mod1.sum <- summary(weight_mod1)
+weight_mod2.sum <- summary(weight_mod2)
+weight_mod3.sum <- summary(weight_mod3)
+weight_mod1.sum
+weight_mod2.sum
+weight_mod3.sum
+
+# Run AIC for each model to help compare and assess the models
+weight_mod1.AIC <-AIC(weight_mod1)
+weight_mod2.AIC <- AIC(weight_mod2)
+weight_mod3.AIC <- AIC(weight_mod3)
+cat("weight_mod1 AIC:", weight_mod1.AIC, "weight_mod2 AIC:", weight_mod2.AIC, "weight_mod3 AIC:", weight_mod3.AIC)
+
+# Use lm.beta to standardize the predictors
+standardized <- lm.beta(weight_mod3)
+standardized
+
+# Look back at correlation matrix to check correlation of each pair of variables
+corr_matrix
+```
+
+### Q15 Discussion:
+
+In the code above I used a Hierarchical Regression approach to linear regression, adding in the predictors in on-by-one. I then ran a summary to help compare and assess each model. AIC was also ran to help determine which model is the strongest. I used `cor()` to assess the correlation between my chosen variables. I also used `lm.beta()` to standardize the predictors so I could see which predictor is the strongest.
+
+I first checked to make sure all of my predictors were significant by looking at each p-value. Every p-value in all models were listed as less than 2 x 10^-16^. This tells me each predictor is significant because each p-value is less than 0.05. So, each predictor is a valid predictor. Next, I looked at the adjusted R^2^ value and the AIC value for each model to help assess which model would be the best. The adjusted R^2^ and AIC values for each model are below:
+
+|    Model    |         Predictor(s)          | Adjusted R^2^ |    AIC    |
+|:-----------:|:-----------------------------:|:-------------:|:---------:|
+| weight_mod1 |           HEIGHT_IN           |    0.2343     | 3,564,682 |
+| weight_mod2 |      HEIGHT_IN, FRY_DAY       |    0.2357     | 3,564,024 |
+| weight_mod3 | HEIGHT_IN, FRY_DAY, SALAD_DAY |    0.2387     | 3,562,626 |
+
+Since `weight_mod3` has the largest adjusted R^2^ value (barely), my initial thought was that it was the strongest of the three models. To help verify this, I looked at the AIC of each model. `weight_mod1` has the largest AIC value, indicating it could be the strongest of the three models. I decided to go with `weight_mod3` as the strongest model since it has the higher adjusted R^2^ value and the AIC values are marginally different. The adjusted R^2^ value is easier to interpret and it explains the variation in weight by all the predictors in the model. The adjusted R^2^ is also (generally) the industry standard according to a friend in the data analysis field.
+
+I also looked at the standardized coefficients to compare the predictors to each other. This gives me a way to rank them by importance. Each variable's standardized coefficient is in the table below:
+
+| Variable  | Standardized Coefficients |
+|:---------:|:-------------------------:|
+| HEIGHT_IN |          0.4786           |
+|  FRY_DAY  |          0.0396           |
+| SALAD_DAY |          -0.0549          |
+
+Based on the values of the standardized coefficients, `HEIGHT_IN` is the strongest predictor of the three variables since it has the largest (in magnitude) value. This also makes sense with the values in the correlation matrix, `corr_matrix`. Based on the values in the matrix, `HEIGHT_IN` and `WEIGHT_LB` have the strongest correlation since their value of r is the largest (in magnitude) at 0.4841.
+
+------------------------------------------------------------------------
+
+# Before submitting to Code Grade:
+
+1)  Clear objects from your environment. Click the broom in the Environment pane in the top right. This will erase any variables (like Q11, Q12) that you've stored.
+
+2)  Rerun all your code. You can click the "Run" option above in this script pane (top right of notebook), then select "Run all". You should have all the variables stored again in the environment pane, and you should see no red error messages in the console below.
+
+3)  **Important**: You only have ONE ATTEMPT to submit Part 2 to the ACTUAL submission link! Ensure you are ready and confident in your work before submitting.
+
+4)  Reread all the directions and questions and make sure you addressed each part carefully, clearly, and thoughtfully.
+
+------------------------------------------------------------------------
+
+This material is for enrolled students' academic use only and protected under U.S. Copyright Laws. This content must not be shared outside the confines of this course, in line with Eastern University's academic integrity policies. Unauthorized reproduction, distribution, or transmission of this material, including but not limited to posting on third-party platforms like GitHub, is strictly prohibited and may lead to disciplinary action. You may not alter or remove any copyright or other notice from copies of any content taken from BrightSpace or Eastern University's website.
+
+© Copyright Notice 2024, Eastern University - All Rights Reserved
